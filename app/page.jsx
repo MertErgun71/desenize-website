@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
+import { useEffect, useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
 import anasayfabg from './images/anasayfabg.png'
 import desenizelogo from './images/desenizelogo.png'
@@ -13,80 +14,107 @@ import grafiktasarim from './images/servicesimages/grafiktasarim.png'
 import socialmedia from './images/servicesimages/socialmedia.png'
 import videoedit from './images/servicesimages/videoedit.png'
 
-export default function Home() {
-  const [activeSection, setActiveSection] = useState(0);
-  const containerRef = useRef(null);
-  const sectionsRef = useRef([]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const container = containerRef.current;
-      if (!container) return;
-
-      const scrollPosition = container.scrollTop;
-      const windowHeight = window.innerHeight;
-      const newActiveSection = Math.round(scrollPosition / windowHeight);
-
-      setActiveSection(newActiveSection);
-    };
-
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('scroll', handleScroll);
-    }
-
-    return () => {
-      if (container) {
-        container.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, []);
-
-  const scrollToSection = (index) => {
-    const container = containerRef.current;
-    if (container) {
-      container.scrollTo({
-        top: index * window.innerHeight,
-        behavior: 'smooth'
-      });
-    }
-  };
+const ParallaxSection = ({ children, yOffset = 100 }) => {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  })
+  const y = useTransform(scrollYProgress, [0, 1], [0, yOffset])
 
   return (
-    <div className="h-screen overflow-hidden">
+    <motion.div ref={ref} style={{ y }}>
+      {children}
+    </motion.div>
+  )
+}
+
+const FadeInWhenVisible = ({ children }) => {
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      transition={{ duration: 0.3 }}
+      variants={{
+        visible: { opacity: 1, scale: 1 },
+        hidden: { opacity: 0, scale: 0.8 }
+      }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+export default function Home() {
+  useEffect(() => {
+    document.documentElement.style.scrollBehavior = 'smooth'
+    return () => {
+      document.documentElement.style.scrollBehavior = ''
+    }
+  }, [])
+
+  return (
+    <div className="bg-gray-900 text-white min-h-screen">
       {/* Header */}
-      <header className="bg-black bg-opacity-50 fixed w-full z-10">
+      <motion.header 
+        className="bg-black bg-opacity-50 fixed w-full z-10"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="container mx-auto px-4 py-6 flex justify-between items-center">
           <Image src={desenizelogo} alt="Desenize Logo" width={150} height={40} />
           <nav>
             <ul className="flex space-x-6">
-              <li><button onClick={() => scrollToSection(0)} className="hover:text-gray-300 font-medium">Ana Sayfa</button></li>
-              <li><button onClick={() => scrollToSection(1)} className="hover:text-gray-300 font-medium">Hizmetlerimiz</button></li>
-              <li><button onClick={() => scrollToSection(2)} className="hover:text-gray-300 font-medium">Hakkımızda</button></li>
-              <li><button onClick={() => scrollToSection(3)} className="hover:text-gray-300 font-medium">İletişim</button></li>
+              <motion.li whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                <a href="#" className="hover:text-gray-300 font-medium">Ana Sayfa</a>
+              </motion.li>
+              <motion.li whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                <a href="#" className="hover:text-gray-300 font-medium">Hizmetlerimiz</a>
+              </motion.li>
+              <motion.li whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                <a href="#" className="hover:text-gray-300 font-medium">Hakkımızda</a>
+              </motion.li>
+              <motion.li whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                <a href="#" className="hover:text-gray-300 font-medium">İletişim</a>
+              </motion.li>
             </ul>
           </nav>
         </div>
-      </header>
+      </motion.header>
 
-      <div ref={containerRef} className="h-screen overflow-y-scroll snap-y snap-mandatory">
-        {/* Hero Section */}
-        <section ref={(el) => (sectionsRef.current[0] = el)} className="h-screen flex items-center justify-center relative snap-start">
+      {/* Hero Section */}
+      <ParallaxSection yOffset={-100}>
+        <section className="relative h-screen flex items-center justify-center">
           <Image src={anasayfabg} alt="Hero Background" fill style={{objectFit: 'cover'}} className="absolute z-0" />
-          <div className="relative z-10 text-center">
-            <h1 className="text-6xl font-bold mb-4 text-white">Hayallerinizin</h1>
-            <h2 className="text-5xl font-light mb-8 text-white">Dijital Yansıması</h2>
-            <p className="text-xl mb-12 font-light text-white">Sizler için hazır, kaliteli ve özgün hizmetler sunuyoruz.</p>
-            <button className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300">
+          <motion.div 
+            className="relative z-10 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h1 className="text-6xl font-bold mb-4">Hayallerinizin</h1>
+            <h2 className="text-5xl font-light mb-8">Dijital Yansıması</h2>
+            <p className="text-xl mb-12 font-light">Sizler için hazır, kaliteli ve özgün hizmetler sunuyoruz.</p>
+            <motion.button 
+              className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
               Keşfet
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         </section>
+      </ParallaxSection>
 
-        {/* Services Section */}
-        <section ref={(el) => (sectionsRef.current[1] = el)} className="h-screen bg-gray-800 flex items-center snap-start">
+      {/* Services Section */}
+      <ParallaxSection yOffset={50}>
+        <section className="py-24 bg-gray-800">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-16 text-center text-white">Hizmetlerimiz</h2>
+            <FadeInWhenVisible>
+              <h2 className="text-4xl font-bold mb-16 text-center">Hizmetlerimiz</h2>
+            </FadeInWhenVisible>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 { name: 'Grafik Tasarım', image: grafiktasarim },
@@ -94,63 +122,89 @@ export default function Home() {
                 { name: 'Web Tasarım', image: webdesign },
                 { name: 'Sosyal Medya Yönetimi', image: socialmedia }
               ].map((service, index) => (
-                <div key={index} className="bg-gray-700 p-6 rounded-lg">
-                  <Image src={service.image} alt={service.name} width={300} height={200} className="mb-4 rounded" />
-                  <h3 className="text-xl font-semibold mb-2 text-white">{service.name}</h3>
-                  <p className="text-gray-300 font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
+                <FadeInWhenVisible key={index}>
+                  <motion.div 
+                    className="bg-gray-700 p-6 rounded-lg"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    <Image src={service.image} alt={service.name} width={300} height={200} className="mb-4 rounded" />
+                    <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
+                    <p className="text-gray-300 font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                  </motion.div>
+                </FadeInWhenVisible>
               ))}
             </div>
           </div>
         </section>
+      </ParallaxSection>
 
-        {/* About Us Section */}
-        <section ref={(el) => (sectionsRef.current[2] = el)} className="h-screen flex items-center snap-start bg-gray-900">
+      {/* About Us Section */}
+      <ParallaxSection yOffset={-50}>
+        <section className="py-24">
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row items-center">
-              <div className="md:w-1/2 mb-8 md:mb-0">
-                <Image src={aboutus} alt="About Us" width={600} height={400} className="rounded-lg" />
-              </div>
-              <div className="md:w-1/2 md:pl-12">
-                <h2 className="text-4xl font-bold mb-6 text-white">Hakkımızda</h2>
-                <p className="text-gray-300 mb-6 font-light">
-                  Desenize Studio, yaratıcı çözümler sunan bir ekiptir. Web tasarım, grafik tasarım, video düzenleme ve sosyal medya yönetimi alanlarında uzmanlaşmış ekibimizle, müşterilerimizin dijital dünyada öne çıkmasına ve hedeflerine ulaşmasına yardımcı oluyoruz.
-                </p>
-                <button className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300">
-                  Daha Fazla
-                </button>
-              </div>
+              <FadeInWhenVisible>
+                <div className="md:w-1/2 mb-8 md:mb-0">
+                  <h2 className="text-4xl font-bold mb-6">Hakkımızda</h2>
+                  <p className="text-gray-300 mb-6 font-light">
+                    Desenize Studio, yaratıcı çözümler sunan bir ekiptir. Web tasarım, grafik tasarım, video düzenleme ve sosyal medya yönetimi alanlarında uzmanlaşmış ekibimizle, müşterilerimizin dijital dünyada öne çıkmasına ve hedeflerine ulaşmasına yardımcı oluyoruz.
+                  </p>
+                  <motion.button 
+                    className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Daha Fazla
+                  </motion.button>
+                </div>
+              </FadeInWhenVisible>
+              <FadeInWhenVisible>
+                <div className="md:w-1/2 md:pl-12">
+                  <Image src={aboutus} alt="About Us" width={600} height={400} className="rounded-lg" />
+                </div>
+              </FadeInWhenVisible>
             </div>
           </div>
         </section>
+      </ParallaxSection>
 
-        {/* Contact Section */}
-        <section ref={(el) => (sectionsRef.current[3] = el)} className="h-screen bg-gray-800 flex items-center snap-start">
+      {/* Contact Section */}
+      <ParallaxSection yOffset={50}>
+        <section className="py-24 bg-gray-800">
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row items-center">
-              <div className="md:w-1/2 mb-8 md:mb-0">
-                <h2 className="text-4xl font-bold mb-6 text-white">Bizimle İletişime Geçin</h2>
-                <p className="text-gray-300 mb-4 font-light">Telefon: +90 544 115 06 17</p>
-                <p className="text-gray-300 mb-6 font-light">Mail: info@desenize.com</p>
-                <button className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300">
-                  Bize Ulaşın
-                </button>
-              </div>
-              <div className="md:w-1/2">
-                <Image src={contact} alt="Contact" width={600} height={400} className="rounded-lg" />
-              </div>
+              <FadeInWhenVisible>
+                <div className="md:w-1/2 mb-8 md:mb-0">
+                  <h2 className="text-4xl font-bold mb-6">Bizimle İletişime Geçin</h2>
+                  <p className="text-gray-300 mb-4 font-light">Telefon: +90 544 115 06 17</p>
+                  <p className="text-gray-300 mb-6 font-light">Mail: info@desenize.com</p>
+                  <motion.button 
+                    className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Bize Ulaşın
+                  </motion.button>
+                </div>
+              </FadeInWhenVisible>
+              <FadeInWhenVisible>
+                <div className="md:w-1/2 md:pl-12 ">
+                  <Image src={contact} alt="Contact" width={600} height={400} className="rounded-lg" />
+                </div>
+              </FadeInWhenVisible>
             </div>
           </div>
         </section>
+      </ParallaxSection>
 
-        {/* Footer */}
-        <footer className="bg-gray-900 py-8">
-          <div className="container mx-auto px-4 text-center">
-            <Image src={desenizelogo} alt="Desenize Logo" width={150} height={40} className="mx-auto mb-4" />
-            <p className="text-gray-500 font-light">&copy; 2023 Desenize. Tüm hakları saklıdır.</p>
-          </div>
-        </footer>
-      </div>
+      {/* Footer */}
+      <footer className="bg-gray-900 py-8">
+        <div className="container mx-auto px-4 text-center">
+          <Image src={desenizelogo} alt="Desenize Logo" width={150} height={40} className="mx-auto mb-4" />
+          <p className="text-gray-500 font-light">&copy; 2023 Desenize. Tüm hakları saklıdır.</p>
+        </div>
+      </footer>
     </div>
   )
 }
