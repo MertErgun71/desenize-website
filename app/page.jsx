@@ -1,7 +1,7 @@
 "use client"
 
 import Image from 'next/image'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 
 import anasayfabg from './images/anasayfabg.png'
@@ -47,18 +47,33 @@ const FadeInWhenVisible = ({ children }) => {
 }
 
 export default function Home() {
+  const [isScrolled, setIsScrolled] = useState(false)
+
   useEffect(() => {
+    window.scrollTo(0, 0)
+
     document.documentElement.style.scrollBehavior = 'smooth'
+    
+    const handleScroll = () => {
+      const scrollTop = window.scrollY
+      setIsScrolled(scrollTop > 50)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
     return () => {
       document.documentElement.style.scrollBehavior = ''
+      window.removeEventListener('scroll', handleScroll)
     }
   }, [])
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen">
+    <div className="bg-gray-900 text-white">
       {/* Header */}
       <motion.header 
-        className="bg-black bg-opacity-50 fixed w-full z-10"
+        className={`fixed w-full z-10 transition-colors duration-300 ${
+          isScrolled ? 'bg-gray-800' : 'bg-transparent'
+        }`}
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -85,118 +100,120 @@ export default function Home() {
       </motion.header>
 
       {/* Hero Section */}
-      <ParallaxSection yOffset={-100}>
-        <section className="relative h-screen flex items-center justify-center">
-          <Image src={anasayfabg} alt="Hero Background" fill style={{objectFit: 'cover'}} className="absolute z-0" />
-          <motion.div 
-            className="relative z-10 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+      <section className="relative min-h-screen flex items-center justify-center">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={anasayfabg}
+            alt="Hero Background"
+            layout="fill"
+            objectFit="cover"
+            quality={100}
+            priority
+          />
+        </div>
+        <motion.div 
+          className="w-full relative z-9 text-left px-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">Hayallerinizin</h1>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-light mb-8">Dijital Yansıması</h2>
+          <h2 className="text-lg sm:text-xl mb-12 font-light mx-auto w-full text-left">Sizler için hızlı, kaliteli ve özgün hizmetler oluşturuyoruz.</h2>
+          
+          <motion.button 
+            className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <h1 className="text-6xl font-bold mb-4">Hayallerinizin</h1>
-            <h2 className="text-5xl font-light mb-8">Dijital Yansıması</h2>
-            <p className="text-xl mb-12 font-light">Sizler için hazır, kaliteli ve özgün hizmetler sunuyoruz.</p>
-            <motion.button 
-              className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Keşfet
-            </motion.button>
-          </motion.div>
-        </section>
-      </ParallaxSection>
+            Keşfet
+          </motion.button>
+        </motion.div>
+      </section>
 
       {/* Services Section */}
-      <ParallaxSection yOffset={50}>
-        <section className="py-24 bg-gray-800">
-          <div className="container mx-auto px-4">
-            <FadeInWhenVisible>
-              <h2 className="text-4xl font-bold mb-16 text-center">Hizmetlerimiz</h2>
-            </FadeInWhenVisible>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[
-                { name: 'Grafik Tasarım', image: grafiktasarim },
-                { name: 'Video Düzenleme', image: videoedit },
-                { name: 'Web Tasarım', image: webdesign },
-                { name: 'Sosyal Medya Yönetimi', image: socialmedia }
-              ].map((service, index) => (
-                <FadeInWhenVisible key={index}>
-                  <motion.div 
-                    className="bg-gray-700 p-6 rounded-lg"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                  >
-                    <Image src={service.image} alt={service.name} width={300} height={200} className="mb-4 rounded" />
-                    <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
-                    <p className="text-gray-300 font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                  </motion.div>
-                </FadeInWhenVisible>
-              ))}
-            </div>
+      <section className="py-24 bg-gray-800">
+        <div className="container mx-auto px-4">
+          <FadeInWhenVisible>
+            <h2 className="text-4xl font-bold mb-16 text-center">Hizmetlerimiz</h2>
+          </FadeInWhenVisible>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { name: 'Grafik Tasarım', image: grafiktasarim },
+              { name: 'Video Düzenleme', image: videoedit },
+              { name: 'Web Tasarım', image: webdesign },
+              { name: 'Sosyal Medya Yönetimi', image: socialmedia }
+            ].map((service, index) => (
+              <FadeInWhenVisible key={index}>
+                <motion.div 
+                  className="bg-gray-700 p-6 rounded-lg"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  <Image src={service.image} alt={service.name} width={300} height={200} className="mb-4 rounded" />
+                  <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
+                  <p className="text-gray-300 font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </motion.div>
+              </FadeInWhenVisible>
+            ))}
           </div>
-        </section>
-      </ParallaxSection>
+        </div>
+      </section>
 
       {/* About Us Section */}
-      <ParallaxSection yOffset={-50}>
-        <section className="py-24">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-center">
-              <FadeInWhenVisible>
-                <div className="md:w-1/2 mb-8 md:mb-0">
-                  <h2 className="text-4xl font-bold mb-6">Hakkımızda</h2>
-                  <p className="text-gray-300 mb-6 font-light">
-                    Desenize Studio, yaratıcı çözümler sunan bir ekiptir. Web tasarım, grafik tasarım, video düzenleme ve sosyal medya yönetimi alanlarında uzmanlaşmış ekibimizle, müşterilerimizin dijital dünyada öne çıkmasına ve hedeflerine ulaşmasına yardımcı oluyoruz.
-                  </p>
-                  <motion.button 
-                    className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Daha Fazla
-                  </motion.button>
-                </div>
-              </FadeInWhenVisible>
-              <FadeInWhenVisible>
-                <div className="md:w-1/2 md:pl-12">
-                  <Image src={aboutus} alt="About Us" width={600} height={400} className="rounded-lg" />
-                </div>
-              </FadeInWhenVisible>
-            </div>
+      <section className="py-24">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center">
+            <FadeInWhenVisible>
+              <div className="md:w-1/2 mb-8 md:mb-0">
+                <h2 className="text-4xl font-bold mb-6">Hakkımızda</h2>
+                <p className="text-gray-300 mb-6 font-light">
+                  Desenize Studio, yaratıcı çözümler sunan bir ekiptir. Web tasarım, grafik tasarım, video düzenleme ve sosyal medya yönetimi alanlarında uzmanlaşmış ekibimizle, müşterilerimizin dijital dünyada öne çıkmasına ve hedeflerine ulaşmasına yardımcı oluyoruz.
+                </p>
+                <motion.button 
+                  className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Daha Fazla
+                </motion.button>
+              </div>
+            </FadeInWhenVisible>
+            <FadeInWhenVisible>
+              <div className="md:w-1/2 md:pl-12">
+                <Image src={aboutus} alt="About Us" width={600} height={400} className="rounded-lg" />
+              </div>
+            </FadeInWhenVisible>
           </div>
-        </section>
-      </ParallaxSection>
+        </div>
+      </section>
 
       {/* Contact Section */}
-      <ParallaxSection yOffset={50}>
-        <section className="py-24 bg-gray-800">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-center">
-              <FadeInWhenVisible>
-                <div className="md:w-1/2 mb-8 md:mb-0">
-                  <h2 className="text-4xl font-bold mb-6">Bizimle İletişime Geçin</h2>
-                  <p className="text-gray-300 mb-4 font-light">Telefon: +90 544 115 06 17</p>
-                  <p className="text-gray-300 mb-6 font-light">Mail: info@desenize.com</p>
-                  <motion.button 
-                    className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Bize Ulaşın
-                  </motion.button>
-                </div>
-              </FadeInWhenVisible>
-              <FadeInWhenVisible>
-                <div className="md:w-1/2 md:pl-12 ">
-                  <Image src={contact} alt="Contact" width={600} height={400} className="rounded-lg" />
-                </div>
-              </FadeInWhenVisible>
-            </div>
+      <section className="py-24 bg-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center">
+            <FadeInWhenVisible>
+              <div className="md:w-1/2 mb-8 md:mb-0">
+                <h2 className="text-4xl font-bold mb-6">Bizimle İletişime Geçin</h2>
+                <p className="text-gray-300 mb-4 font-light">Telefon: +90 544 115 06 17</p>
+                <p className="text-gray-300 mb-6 font-light">Mail: info@desenize.com</p>
+                <motion.button 
+                  className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Bize Ulaşın
+                </motion.button>
+              </div>
+            </FadeInWhenVisible>
+            <FadeInWhenVisible>
+              <div className="md:w-1/2 md:pl-12 ">
+                <Image src={contact} alt="Contact" width={600} height={400} className="rounded-lg" />
+              </div>
+            </FadeInWhenVisible>
           </div>
-        </section>
-      </ParallaxSection>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="bg-gray-900 py-8">
