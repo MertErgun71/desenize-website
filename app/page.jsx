@@ -117,17 +117,10 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">Hayallerinizin</h1>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-light mb-8">Dijital Yansıması</h2>
-          <h2 className="text-lg sm:text-xl mb-12 font-light mx-auto w-full text-left">Sizler için hızlı, kaliteli ve özgün hizmetler oluşturuyoruz.</h2>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-normal mb-4">Hayallerinizin</h1>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-thin mb-8">Dijital Yansıması</h2>
+          <h2 className="text-lg sm:text-xl mb-12 font-normal mx-auto w-full text-left">Sizler için hızlı, kaliteli ve özgün hizmetler oluşturuyoruz.</h2>
           
-          <motion.button 
-            className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Keşfet
-          </motion.button>
         </motion.div>
       </section>
 

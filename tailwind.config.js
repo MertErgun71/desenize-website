@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-ubuntu)'],
+        sans: ['var(--font-space-grotesk)'],
       },
     },
   },
