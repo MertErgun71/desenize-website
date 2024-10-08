@@ -78,21 +78,21 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="container mx-auto px-4 py-6 flex justify-between items-center">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Image src={desenizelogo} alt="Desenize Logo" width={150} height={40} />
           <nav>
             <ul className="flex space-x-6">
-              <motion.li whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                <a href="#" className="hover:text-gray-300 font-medium">Ana Sayfa</a>
+              <motion.li>
+                <a href="#" className="hover:text-gray-300 font-light text-lg">Ana Sayfa</a>
               </motion.li>
-              <motion.li whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                <a href="#" className="hover:text-gray-300 font-medium">Hizmetlerimiz</a>
+              <motion.li>
+                <a href="#" className="hover:text-gray-300 font-light text-lg">Hizmetlerimiz</a>
               </motion.li>
-              <motion.li whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                <a href="#" className="hover:text-gray-300 font-medium">Hakkımızda</a>
+              <motion.li>
+                <a href="#" className="hover:text-gray-300 font-light text-lg">Hakkımızda</a>
               </motion.li>
-              <motion.li whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                <a href="#" className="hover:text-gray-300 font-medium">İletişim</a>
+              <motion.li>
+                <a href="#" className="hover:text-gray-300 font-light text-lg">İletişim</a>
               </motion.li>
             </ul>
           </nav>
@@ -112,15 +112,14 @@ export default function Home() {
           />
         </div>
         <motion.div 
-          className="w-full relative z-9 text-left px-24"
+          className="container mx-auto px-4 relative z-9 text-left"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-normal mb-4">Hayallerinizin</h1>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-thin mb-8">Dijital Yansıması</h2>
-          <h2 className="text-lg sm:text-xl mb-12 font-normal mx-auto w-full text-left">Sizler için hızlı, kaliteli ve özgün hizmetler oluşturuyoruz.</h2>
-          
+          <h2 className="text-lg sm:text-xl mb-12 font-normal w-full text-left">Sizler için hızlı, kaliteli ve özgün hizmetler oluşturuyoruz.</h2>
         </motion.div>
       </section>
 
@@ -154,29 +153,29 @@ export default function Home() {
       </section>
 
       {/* About Us Section */}
-      <section className="py-24">
+      <section className="py-24 bg-gray-900">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center">
-            <FadeInWhenVisible>
-              <div className="md:w-1/2 mb-8 md:mb-0">
-                <h2 className="text-4xl font-bold mb-6">Hakkımızda</h2>
-                <p className="text-gray-300 mb-6 font-light">
-                  Desenize Studio, yaratıcı çözümler sunan bir ekiptir. Web tasarım, grafik tasarım, video düzenleme ve sosyal medya yönetimi alanlarında uzmanlaşmış ekibimizle, müşterilerimizin dijital dünyada öne çıkmasına ve hedeflerine ulaşmasına yardımcı oluyoruz.
-                </p>
-                <motion.button 
-                  className="bg-transparent hover:bg-white text-white hover:text-black border border-white font-bold py-2 px-4 rounded transition duration-300"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Daha Fazla
-                </motion.button>
-              </div>
-            </FadeInWhenVisible>
-            <FadeInWhenVisible>
-              <div className="md:w-1/2 md:pl-12">
-                <Image src={aboutus} alt="About Us" width={600} height={400} className="rounded-lg" />
-              </div>
-            </FadeInWhenVisible>
+          <div className="flex flex-col lg:flex-row items-start gap-12">
+            <div className="lg:w-1/2">
+              <img 
+                src={aboutus.src} 
+                alt="About Us" 
+                className="w-full h-full object-cover rounded-lg"
+              />
+            </div>
+            <div className="lg:w-1/2">
+              <h2 className="text-5xl font-thin mb-8">Hakkımızda</h2>
+              <p className="text-gray-300 mb-6 font-light leading-relaxed">
+                Desenize Studio, yaratıcı çözümler sunan bir ekiptir. Web tasarım, grafik tasarım, video düzenleme ve sosyal medya yönetimi alanlarında uzmanlaşmış ekibimizle, müşterilerimizin dijital dünyada öne çıkmasına ve hedeflerine ulaşmasına yardımcı oluyoruz.
+              </p>
+              <p className="text-gray-300 mb-6 font-light leading-relaxed">
+                Her projeye, benzersiz bir bakış açısıyla yaklaşıyor ve sizin ihtiyaçlarınıza en uygun tasarımları oluşturuyoruz. Radikal ve dikkat çekici estetik anlayışımızla, markanızı görsel olarak güçlü bir şekilde temsil ediyoruz.
+              </p>
+              <p className="text-gray-300 mb-8 font-light leading-relaxed">
+                Müşteri memnuniyeti ve kaliteli hizmet anlayışı ile yola çıktığımız Desenize Studio, tasarım dünyasında fark yaratmak isteyenler için ideal bir ortak. Siz de yaratıcı çözümlerimizle tanışmak için bizimle iletişime geçin!
+              </p>
+              
+            </div>
           </div>
         </div>
       </section>
